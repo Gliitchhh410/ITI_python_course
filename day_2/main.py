@@ -1,4 +1,8 @@
+import os
 import mysql.connector
+from dotenv import load_dotenv
+load_dotenv()
+
 
 
 class Employee:
@@ -6,10 +10,10 @@ class Employee:
     all_emps = []
 
     connection = mysql.connector.connect(
-        host="localhost",
-        user="your_username",
-        password="your_password",
-        database="your_database"
+        host=os.getenv("DB_HOST"),
+        user=os.getenv("DB_USER"),
+        password=os.getenv("DB_PASSWORD"),
+        database=os.getenv("DB_DATABASE")
     )
     cursor = connection.cursor()
     def __init__(self, first_name, last_name, age, department, salary):
