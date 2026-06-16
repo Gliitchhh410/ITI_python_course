@@ -1,0 +1,16 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'books/style.css' %}">
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Delete {{ book.title }}</title>
+</head>
+<body>
+    <h1>Are you sure you want to delete "{{ book.title }}"?</h1>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Confirm Delete</button>
+    </form>
+    <a href="{% url 'book_list' %}">Cancel</a>
+</body>
+</html>

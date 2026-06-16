@@ -1,0 +1,24 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'books/style.css' %}">
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Book List</title>
+</head>
+<body>
+    <h1>Books Library</h1>
+    <a href="{% url 'book_create' %}">Add New Book</a>
+    <ul>
+        {% for book in books %}
+            <li>
+                <a href="{% url 'book_detail' book.pk %}">{{ book.title }}</a> 
+                (Rating: {{ book.rate }} | Views: {{ book.views }})
+                | <a href="{% url 'book_update' book.pk %}">Edit</a>
+                | <a href="{% url 'book_delete' book.pk %}">Delete</a>
+            </li>
+        {% empty %}
+            <li>No books available.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
