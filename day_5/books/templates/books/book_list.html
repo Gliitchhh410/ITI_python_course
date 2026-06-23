@@ -1,0 +1,71 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Books Library</title>
+    <link rel="stylesheet" href="{% static 'books/style.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="navbar">
+        <div class="logo">📚 ITI Bookstore</div>
+        <div class="nav-links">
+            {% if user.is_authenticated %}
+                <span class="user-greeting">Welcome, <strong>{{ user.username }}</strong>!</span>
+                <a href="{% url 'book_create' %}" class="btn btn-primary">Add Book</a>
+                <a href="{% url 'logout' %}" class="btn btn-secondary">Logout</a>
+            {% else %}
+                <a href="{% url 'login' %}" class="btn btn-secondary">Login</a>
+                <a href="{% url 'signup' %}" class="btn btn-primary">Sign Up</a>
+            {% endif %}
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <h1>Explore Our Collection</h1>
+            <p>A curated space for sharing knowledge and reviews</p>
+        </section>
+
+        <section class="book-grid">
+            {% for book in books %}
+                <div class="book-card">
+                    <div class="book-info">
+                        <h3><a href="{% url 'book_detail' book.pk %}" class="book-title-link">{{ book.title }}</a></h3>
+                        <p class="book-author">By {{ book.user.username }}</p>
+                        <p class="book-desc">{{ book.desc|truncatewords:20 }}</p>
+                        
+                        <div class="categories-list">
+                            {% for category in book.categories.all %}
+                                <span class="badge">{{ category.name }}</span>
+                            {% empty %}
+                                <span class="badge badge-muted">Uncategorized</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <div class="book-meta">
+                        <div class="stats">
+                            <span class="stat-item" title="Rating">⭐ {{ book.rate }}/5</span>
+                            <span class="stat-item" title="Views">👁️ {{ book.views }}</span>
+                        </div>
+                        <div class="actions">
+                            <a href="{% url 'book_update' book.pk %}" class="action-btn edit-btn">Edit</a>
+                            <a href="{% url 'book_delete' book.pk %}" class="action-btn delete-btn">Delete</a>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="no-books">
+                    <p>No books available. Be the first to share one!</p>
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'book_create' %}" class="btn btn-primary">Add New Book</a>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </section>
+    </main>
+</body>
+</html>

@@ -1,0 +1,72 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ book.title }} - Details</title>
+    <link rel="stylesheet" href="{% static 'books/style.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="navbar">
+        <div class="logo">📚 ITI Bookstore</div>
+        <div class="nav-links">
+            <a href="{% url 'book_list' %}" class="btn btn-secondary">Back to List</a>
+            {% if user.is_authenticated %}
+                <a href="{% url 'book_update' book.pk %}" class="btn btn-primary">Edit Book</a>
+            {% endif %}
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="card detail-card">
+            <div class="detail-header">
+                <h1>{{ book.title }}</h1>
+                <p class="book-author">Shared by <strong>{{ book.user.username }}</strong></p>
+                
+                <div class="categories-list">
+                    {% for category in book.categories.all %}
+                        <span class="badge">{{ category.name }}</span>
+                    {% empty %}
+                        <span class="badge badge-muted">Uncategorized</span>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <hr class="divider">
+
+            <div class="detail-body">
+                <h3>Description</h3>
+                <p class="book-desc-full">{{ book.desc }}</p>
+                
+                <div class="stats-panel">
+                    <div class="stat-card">
+                        <span class="stat-label">Rating</span>
+                        <span class="stat-val">⭐ {{ book.rate }} / 5</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Views</span>
+                        <span class="stat-val">👁️ {{ book.views }}</span>
+                    </div>
+                </div>
+
+                <hr class="divider">
+
+                <div class="isbn-section">
+                    <h3>ISBN Information</h3>
+                    {% if book.isbn %}
+                        <div class="isbn-box">
+                            <p><strong>ISBN Number:</strong> <code class="isbn-code">{{ book.isbn.isbn_number }}</code></p>
+                            <p><strong>ISBN Book Title:</strong> {{ book.isbn.book_title }}</p>
+                            <p><strong>ISBN Author Title:</strong> {{ book.isbn.author_title }}</p>
+                        </div>
+                    {% else %}
+                        <p class="text-muted">No ISBN registered for this book.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
